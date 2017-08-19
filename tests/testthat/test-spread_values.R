@@ -193,6 +193,18 @@ test_that('deprecated functions warn appropriately', {
   expect_warning(j %>% spread_values(c=jlogical(c)),deptxt('jlogical','json_lgl'))
 })
 
+test_that('works with rlang', {
+  json <- '{"a":1,"b":2,"c":3}'
+  v1 <- 'a'; v2 <- 'b'; v3 <- 'c';
+  d <- json %>% spread_values(
+    a=json_dbl(rlang::UQ(v1))
+    , b=json_dbl(rlang::UQ(v2))
+    , c=json_dbl(rlang::UQ(v3))
+  )
+  
+  expect_identical(as_tibble(d),dplyr::data_frame(document.id=1L,a=1,b=2,c=3))
+})
+
 context("recursive option")
 
 test_that("recursive works for simple input", {
